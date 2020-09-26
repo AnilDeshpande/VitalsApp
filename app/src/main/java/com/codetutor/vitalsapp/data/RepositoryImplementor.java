@@ -3,25 +3,33 @@
 import android.content.Context;
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.codetutor.vitalsapp.MyApplication;
 import com.codetutor.vitalsapp.bean.Vital;
 import com.codetutor.vitalsapp.bean.VitalsInfo;
+import com.codetutor.vitalsapp.networking.VitalsAPIProvider;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
     public class RepositoryImplementor implements IRepository{
 
     private static final String TAG = RepositoryImplementor.class.getSimpleName();
 
     private Context context;
-    private VitalsInfo vitalsInfo;
+
 
     private static IRepository instance;
+    private VitalsAPIProvider apiProvider;
+
+    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private MutableLiveData<VitalsInfo> vitalsInfoMutableLiveData = new MutableLiveData<VitalsInfo>();
 
     public static IRepository getInstance(Context context) {
         if(instance==null){
@@ -32,6 +40,31 @@ import java.util.List;
 
     private RepositoryImplementor(Context context) {
         this.context = context;
+        apiProvider = MyApplication.getVitalsAPIProvider();
+        isLoading.postValue(true);
+        apiProvider.getVitalsInfo().enqueue(new Callback<VitalsInfo>() {
+            @Override
+            public void onResponse(Call<VitalsInfo> call, Response<VitalsInfo> response) {
+                Log.i(TAG,"response has been successfully got and being set");
+                vitalsInfoMutableLiveData.postValue(response.body());
+                isLoading.postValue(false);
+            }
+
+            @Override
+            public void onFailure(Call<VitalsInfo> call, Throwable t) {
+                Log.i(TAG,"response could not be got, value being fetched from cache");
+                vitalsInfoMutableLiveData.setValue(readFromLocalCache());
+                isLoading.postValue(false);
+            }
+        });
+    }
+
+    @Override
+    public MutableLiveData<Boolean> getIsLoading() {
+        return isLoading;
+    }
+
+    private VitalsInfo readFromLocalCache(){
         String jsonString = null;
         try {
             InputStream is = context.getAssets().open("vitals_mock_data.json");
@@ -45,19 +78,17 @@ import java.util.List;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        vitalsInfo = new Gson().fromJson(jsonString, VitalsInfo.class);
+        return new Gson().fromJson(jsonString, VitalsInfo.class);
     }
 
     @Override
-    public MutableLiveData<VitalsInfo> getVitalsInfo() {
-        MutableLiveData<VitalsInfo> vitalsInfo = new MutableLiveData<VitalsInfo>();
-        vitalsInfo.setValue(this.vitalsInfo);
-        return vitalsInfo;
+    public MutableLiveData<VitalsInfo> getVitalsInfoMutableLiveData() {
+        return this.vitalsInfoMutableLiveData;
     }
 
     public MutableLiveData<Vital> getVitalsForSelected (String type){
         Vital specificVital = null;
-        for(Vital vital: this.vitalsInfo.getVitals()){
+        for(Vital vital: this.vitalsInfoMutableLiveData.getValue().getVitals()){
             if(vital.getType().equals(type)){
                 specificVital = vital;
             }

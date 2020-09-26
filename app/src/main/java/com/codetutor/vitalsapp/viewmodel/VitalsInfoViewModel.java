@@ -23,7 +23,7 @@ public class VitalsInfoViewModel extends ViewModel {
     public VitalsInfoViewModel(){
         super();
         repository = RepositoryImplementor.getInstance(MyApplication.getContext());
-        vitalsInfoLiveData = repository.getVitalsInfo();
+        vitalsInfoLiveData = repository.getVitalsInfoMutableLiveData();
         selectedVitalLiveData = new MutableLiveData<>();
         selectedVitals = new MutableLiveData<>();
     }
@@ -43,5 +43,9 @@ public class VitalsInfoViewModel extends ViewModel {
 
     public LiveData<Vital> getVitals(){
         return selectedVitals;
+    }
+
+    public LiveData<Boolean> isLoadingLiveData(){
+        return repository.getIsLoading();
     }
 }
