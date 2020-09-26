@@ -39,7 +39,7 @@ public class VitalsInfoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(vital.getType()+"("+vital.getUnit()+")");
-
+        String unit = vital.getUnit() == null || vital.getUnit().equals("")? "Unit Unavailable":vital.getUnit();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(vital.getType()+"("+unit+")");
     }
 }
