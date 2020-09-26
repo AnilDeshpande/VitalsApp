@@ -49,42 +49,22 @@ import java.util.List;
     }
 
     @Override
-    public LiveData<Vital> getWeightVitals() {
-        MutableLiveData<Vital> weightVitals = new MutableLiveData<Vital>();
-        weightVitals.setValue(getVitals(IRepository.TYPE_WEIGHT));
-        return weightVitals;
+    public MutableLiveData<VitalsInfo> getVitalsInfo() {
+        MutableLiveData<VitalsInfo> vitalsInfo = new MutableLiveData<VitalsInfo>();
+        vitalsInfo.setValue(this.vitalsInfo);
+        return vitalsInfo;
     }
 
-    @Override
-    public LiveData<Vital> getBloodPressureVitals() {
-
-        MutableLiveData<Vital> bloodPressureVitals = new MutableLiveData<Vital>();
-        bloodPressureVitals.setValue(getVitals(IRepository.TYPE_BLOOD_PRESSURE));
-        return bloodPressureVitals;
-    }
-
-    @Override
-    public LiveData<Vital> getSleepVitals() {
-        MutableLiveData<Vital> sleepVitals = new MutableLiveData<Vital>();
-        sleepVitals.setValue(getVitals(IRepository.TYPE_SLEEP));
-        return sleepVitals;
-    }
-
-    @Override
-    public LiveData<Vital> getBloodSugarVitals() {
-        MutableLiveData<Vital> bloodSugarVitals = new MutableLiveData<Vital>();
-        bloodSugarVitals.setValue(getVitals(IRepository.TYPE_BLOOD_SUGAR));
-        return bloodSugarVitals;
-    }
-
-        private Vital getVitals(String type){
-            List<Vital> allVitals = vitalsInfo.getVitals();
-            Vital specficVital = null;
-            for(Vital vital: allVitals){
-                if(vital.getType().equals(IRepository.TYPE_WEIGHT)){
-                    specficVital = vital;
-                }
+    public MutableLiveData<Vital> getVitalsForSelected (String type){
+        Vital specificVital = null;
+        for(Vital vital: this.vitalsInfo.getVitals()){
+            if(vital.getType().equals(type)){
+                specificVital = vital;
             }
-            return specficVital;
         }
+
+        MutableLiveData<Vital> vitals = new MutableLiveData<Vital>();
+        vitals.setValue(specificVital);
+        return vitals;
+    }
 }

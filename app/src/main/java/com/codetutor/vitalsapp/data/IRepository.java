@@ -1,8 +1,10 @@
 package com.codetutor.vitalsapp.data;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.codetutor.vitalsapp.bean.Vital;
+import com.codetutor.vitalsapp.bean.VitalsInfo;
 
 public interface IRepository {
 
@@ -11,8 +13,6 @@ public interface IRepository {
     String TYPE_SLEEP = "Sleep";
     String TYPE_BLOOD_SUGAR = "Blood Sugar";
 
-    LiveData<Vital> getWeightVitals();
-    LiveData<Vital> getBloodPressureVitals();
-    LiveData<Vital> getSleepVitals();
-    LiveData<Vital> getBloodSugarVitals();
+    MutableLiveData<VitalsInfo> getVitalsInfo();
+    MutableLiveData<Vital> getVitalsForSelected(String selectedType);
 }
