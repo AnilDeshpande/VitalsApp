@@ -51,10 +51,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         Bundle bundle = getArguments();
         vitalsInfo = (VitalsInfo) bundle.getSerializable("VitalsInfo");
-
-        textViewName.setText("Name: "+vitalsInfo.getName());
-        textViewDateOfBirth.setText("Date of Birth: "+vitalsInfo.getDob());
-        textViewCity.setText("City: "+vitalsInfo.getCity());
+        if(vitalsInfo!=null){
+            textViewName.setText("Name: "+vitalsInfo.getName());
+            textViewDateOfBirth.setText("Date of Birth: "+vitalsInfo.getDob());
+            textViewCity.setText("City: "+vitalsInfo.getCity());
+        }
 
         buttonBloodPressure.setText(IRepository.TYPE_BLOOD_PRESSURE);
         buttonSleep.setText(IRepository.TYPE_SLEEP);

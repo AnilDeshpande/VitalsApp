@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.codetutor.vitalsapp.bean.Vital;
 import com.codetutor.vitalsapp.bean.VitalsInfo;
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements VitalSelectedList
     LiveData<VitalsInfo> vitalsInfoLiveData;
     LiveData<Vital> vitalLiveData;
 
+    private ProgressBar progressBar;
+
     private VitalsInfoViewModel viewModel;
 
     @Override
@@ -31,18 +35,32 @@ public class MainActivity extends AppCompatActivity implements VitalSelectedList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+
         viewModel = ViewModelProviders.of(this).get(VitalsInfoViewModel.class);
+
         vitalsInfoLiveData = viewModel.getVitalsInfoLiveData();
 
-        vitalsInfoLiveData.observe(this, new Observer<VitalsInfo>() {
+        viewModel.isLoadingLiveData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    progressBar.setVisibility(View.VISIBLE);
+                }else {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        vitalsInfoLiveData.observe(MainActivity.this, new Observer<VitalsInfo>() {
             @Override
             public void onChanged(VitalsInfo vitalsInfo) {
-                Log.i(TAG,"Selected Vitals modified: "+vitalsInfo.getName());
+                loadMainFragment();
             }
         });
 
         vitalLiveData = viewModel.getVitals();
-        vitalLiveData.observe(this, new Observer<Vital>() {
+        vitalLiveData.observe(MainActivity.this, new Observer<Vital>() {
             @Override
             public void onChanged(Vital vital) {
                 if(vital!=null){
@@ -53,16 +71,12 @@ public class MainActivity extends AppCompatActivity implements VitalSelectedList
             }
         });
 
-        viewModel.selectedVitalLiveData().observe(this, new Observer<String>() {
+        viewModel.selectedVitalLiveData().observe(MainActivity.this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 Log.i(TAG,"New Vital selected : "+s);
             }
         });
-
-        if(savedInstanceState==null){
-            loadMainFragment();
-        }
     }
 
     private void loadMainFragment(){
@@ -70,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements VitalSelectedList
         Bundle bundle = new Bundle();
         bundle.putSerializable("VitalsInfo", vitalsInfoLiveData.getValue());
         mainFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer,mainFragment).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer,mainFragment).commit();
     }
 
     private void loadVitalsInfoFragment(){

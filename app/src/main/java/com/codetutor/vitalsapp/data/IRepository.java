@@ -13,6 +13,7 @@ public interface IRepository {
     String TYPE_SLEEP = "Sleep";
     String TYPE_BLOOD_SUGAR = "Blood Sugar";
 
-    MutableLiveData<VitalsInfo> getVitalsInfo();
+    MutableLiveData<VitalsInfo> getVitalsInfoMutableLiveData();
     MutableLiveData<Vital> getVitalsForSelected(String selectedType);
+    MutableLiveData<Boolean> getIsLoading();
 }
