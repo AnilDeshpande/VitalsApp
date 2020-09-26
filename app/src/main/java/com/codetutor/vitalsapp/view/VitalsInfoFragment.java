@@ -60,7 +60,6 @@ public class VitalsInfoFragment extends Fragment {
 
     private void preparedDataForChart(){
         List<Float> values = Utils.getDataInFloats(vital.getValues(),vital.getType());
-        Log.i(TAG, "ConvertedValues: "+ values);
 
         ArrayList<Entry> yValues = new ArrayList<>();
         for(int i=0;i<values.size();i++){

@@ -49,7 +49,6 @@ import retrofit2.Response;
         apiProvider.getVitalsInfo().enqueue(new Callback<VitalsInfo>() {
             @Override
             public void onResponse(Call<VitalsInfo> call, Response<VitalsInfo> response) {
-                Log.i(TAG,"response has been successfully got and being set");
                 vitalsInfoMutableLiveData.postValue(response.body());
                 simpleCustomCache.saveVitalsInfo(response.body());
                 isLoading.postValue(false);
@@ -58,13 +57,10 @@ import retrofit2.Response;
             @Override
             public void onFailure(Call<VitalsInfo> call, Throwable t) {
                 if(simpleCustomCache.isVitalsInfoCached()){
-                    Log.i(TAG,"response could not be got, value being fetched from previous fetch");
                     vitalsInfoMutableLiveData.setValue(simpleCustomCache.fetchVitalsInfo());
                 }else {
-                    Log.i(TAG,"response could not be got, value being fetched from mock");
                     vitalsInfoMutableLiveData.setValue(readFromLocalCache());
                 }
-
 
                 isLoading.postValue(false);
             }
