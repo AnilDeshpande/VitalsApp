@@ -97,7 +97,7 @@ public class VitalsInfoFragment extends Fragment {
     public void onResume() {
         super.onResume();
         String unit = vital.getUnit() == null || vital.getUnit().equals("")? "Unit Unavailable":vital.getUnit();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(vital.getType()+"("+unit+")");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(vital.getType()+" ("+unit+")");
         preparedDataForChart();
     }
 
