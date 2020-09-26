@@ -2,6 +2,7 @@ package com.codetutor.vitalsapp.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.codetutor.vitalsapp.MyApplication;
 import com.codetutor.vitalsapp.bean.Vital;
@@ -9,7 +10,7 @@ import com.codetutor.vitalsapp.bean.VitalsInfo;
 import com.codetutor.vitalsapp.data.IRepository;
 import com.codetutor.vitalsapp.data.RepositoryImplementor;
 
-class VitalsInfoViewModel {
+public class VitalsInfoViewModel extends ViewModel {
 
     IRepository repository;
 
@@ -17,15 +18,19 @@ class VitalsInfoViewModel {
 
     MutableLiveData<String> selectedVitalLiveData;
 
+    MutableLiveData<Vital> selectedVitals;
+
     public VitalsInfoViewModel(){
         super();
         repository = RepositoryImplementor.getInstance(MyApplication.getContext());
         vitalsInfoLiveData = repository.getVitalsInfo();
-        selectedVitalLiveData.setValue(null);
+        selectedVitalLiveData = new MutableLiveData<>();
+        selectedVitals = new MutableLiveData<>();
     }
 
     public void onVitalsSelected(String vitals){
         selectedVitalLiveData.setValue(vitals);
+        selectedVitals.setValue(repository.getVitalsForSelected(selectedVitalLiveData.getValue()).getValue());
     }
 
     public MutableLiveData<String> selectedVitalLiveData(){
@@ -37,6 +42,6 @@ class VitalsInfoViewModel {
     }
 
     public LiveData<Vital> getVitals(){
-        return repository.getVitalsForSelected(selectedVitalLiveData.getValue());
+        return selectedVitals;
     }
 }

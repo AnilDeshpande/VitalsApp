@@ -1,11 +1,12 @@
 
 package com.codetutor.vitalsapp.bean;
 
+import java.io.Serializable;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class VitalsInfo {
+public class VitalsInfo implements Serializable {
 
     @SerializedName("name")
     @Expose
