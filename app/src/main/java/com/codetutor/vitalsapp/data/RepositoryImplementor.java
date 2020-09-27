@@ -1,49 +1,37 @@
     package com.codetutor.vitalsapp.data;
 
-import android.content.Context;
-import android.util.Log;
+    import android.content.Context;
 
-import androidx.lifecycle.MutableLiveData;
+    import androidx.lifecycle.MutableLiveData;
 
-import com.codetutor.vitalsapp.MyApplication;
-import com.codetutor.vitalsapp.bean.Vital;
-import com.codetutor.vitalsapp.bean.VitalsInfo;
-import com.codetutor.vitalsapp.networking.VitalsAPIProvider;
-import com.google.gson.Gson;
+    import com.codetutor.vitalsapp.bean.Vital;
+    import com.codetutor.vitalsapp.bean.VitalsInfo;
+    import com.codetutor.vitalsapp.networking.VitalsAPIProvider;
 
-import java.io.IOException;
-import java.io.InputStream;
+    import javax.inject.Inject;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+    import dagger.hilt.android.qualifiers.ApplicationContext;
+    import retrofit2.Call;
+    import retrofit2.Callback;
+    import retrofit2.Response;
 
-    public class RepositoryImplementor implements IRepository{
+    public class RepositoryImplementor implements IRepository {
 
     private static final String TAG = RepositoryImplementor.class.getSimpleName();
 
-    private Context context;
-
-
-    private static IRepository instance;
-    private VitalsAPIProvider apiProvider;
-    private SimpleCustomCache simpleCustomCache;
+    @Inject Context context;
+    @Inject VitalsAPIProvider apiProvider;
+    @Inject SimpleCustomCache simpleCustomCache;
 
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private MutableLiveData<VitalsInfo> vitalsInfoMutableLiveData = new MutableLiveData<VitalsInfo>();
 
-    public static IRepository getInstance(Context context) {
-        if(instance==null){
-            instance = new RepositoryImplementor(context);
-        }
-        return instance;
-    }
+    @Inject
+    public RepositoryImplementor(@ApplicationContext Context context, VitalsAPIProvider provider, SimpleCustomCache cache) {
 
-    private RepositoryImplementor(Context context) {
         this.context = context;
-
-        apiProvider = MyApplication.getVitalsAPIProvider();
-        simpleCustomCache = MyApplication.getSimpleCustomCache();
+        this.apiProvider = provider;
+        this.simpleCustomCache = cache;
 
         isLoading.postValue(true);
         apiProvider.getVitalsInfo().enqueue(new Callback<VitalsInfo>() {
@@ -56,12 +44,7 @@ import retrofit2.Response;
 
             @Override
             public void onFailure(Call<VitalsInfo> call, Throwable t) {
-                if(simpleCustomCache.isVitalsInfoCached()){
-                    vitalsInfoMutableLiveData.setValue(simpleCustomCache.fetchVitalsInfo());
-                }else {
-                    vitalsInfoMutableLiveData.setValue(readFromLocalCache());
-                }
-
+                vitalsInfoMutableLiveData.setValue(simpleCustomCache.fetchVitalsInfo());
                 isLoading.postValue(false);
             }
         });
@@ -70,23 +53,6 @@ import retrofit2.Response;
     @Override
     public MutableLiveData<Boolean> getIsLoading() {
         return isLoading;
-    }
-
-    private VitalsInfo readFromLocalCache(){
-        String jsonString = null;
-        try {
-            InputStream is = context.getAssets().open("vitals_mock_data.json");
-
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            jsonString = new String(buffer, "UTF-8");
-            //Log.i(TAG,jsonString);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new Gson().fromJson(jsonString, VitalsInfo.class);
     }
 
     @Override

@@ -17,8 +17,12 @@ import com.codetutor.vitalsapp.bean.VitalsInfo;
 import com.codetutor.vitalsapp.view.MainFragment;
 import com.codetutor.vitalsapp.view.VitalSelectedListener;
 import com.codetutor.vitalsapp.view.VitalsInfoFragment;
+import com.codetutor.vitalsapp.viewmodel.VitalsInfoModelFactory;
 import com.codetutor.vitalsapp.viewmodel.VitalsInfoViewModel;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements VitalSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -37,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements VitalSelectedList
 
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
 
-        viewModel = ViewModelProviders.of(this).get(VitalsInfoViewModel.class);
+        viewModel = ViewModelProviders.of(this, new VitalsInfoModelFactory(((MyApplication)getApplication()).getRepository())).get(VitalsInfoViewModel.class);
 
         vitalsInfoLiveData = viewModel.getVitalsInfoLiveData();
 

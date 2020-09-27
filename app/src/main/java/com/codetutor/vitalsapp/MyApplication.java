@@ -3,36 +3,37 @@ package com.codetutor.vitalsapp;
 import android.app.Application;
 import android.content.Context;
 
+import com.codetutor.vitalsapp.data.IRepository;
+import com.codetutor.vitalsapp.data.RepositoryImplementor;
 import com.codetutor.vitalsapp.data.SimpleCustomCache;
-import com.codetutor.vitalsapp.networking.VitalsAPIConstants;
 import com.codetutor.vitalsapp.networking.VitalsAPIProvider;
 
+import javax.inject.Inject;
+
+import dagger.Module;
+import dagger.hilt.android.HiltAndroidApp;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 import okhttp3.logging.HttpLoggingInterceptor;
 
+@HiltAndroidApp
 public class MyApplication extends Application {
 
-    private static Context context;
+    @ApplicationContext
+    @Inject
+    Context context;
 
-    protected static VitalsAPIProvider vitalsAPIProvider;
-    protected static SimpleCustomCache simpleCustomCache;
+    @Inject VitalsAPIProvider vitalsAPIProvider;
+    @Inject SimpleCustomCache simpleCustomCache;
+
+    IRepository repository;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        this.context = this;
-        vitalsAPIProvider = VitalsAPIProvider.getApiServiceProvider(VitalsAPIConstants.BASE_URL, 5000, 5000, HttpLoggingInterceptor.Level.BODY);
-        simpleCustomCache = new SimpleCustomCache(this.context);
+        repository = new RepositoryImplementor(context,vitalsAPIProvider, simpleCustomCache);
     }
 
-    public static Context getContext(){
-        return context;
-    }
-
-    public static VitalsAPIProvider getVitalsAPIProvider(){
-        return vitalsAPIProvider;
-    }
-
-    public static SimpleCustomCache getSimpleCustomCache(){
-        return simpleCustomCache;
+    public IRepository getRepository(){
+        return this.repository;
     }
 }

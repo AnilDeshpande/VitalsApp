@@ -20,9 +20,9 @@ public class VitalsInfoViewModel extends ViewModel {
 
     MutableLiveData<Vital> selectedVitals;
 
-    public VitalsInfoViewModel(){
+    public VitalsInfoViewModel(IRepository repository){
         super();
-        repository = RepositoryImplementor.getInstance(MyApplication.getContext());
+        this.repository = repository;
         vitalsInfoLiveData = repository.getVitalsInfoMutableLiveData();
         selectedVitalLiveData = new MutableLiveData<>();
         selectedVitals = new MutableLiveData<>();
