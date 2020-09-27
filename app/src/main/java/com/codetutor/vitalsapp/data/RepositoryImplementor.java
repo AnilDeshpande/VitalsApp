@@ -24,26 +24,17 @@ import retrofit2.Response;
 
     private Context context;
 
-
-    private static IRepository instance;
     private VitalsAPIProvider apiProvider;
     private SimpleCustomCache simpleCustomCache;
 
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private MutableLiveData<VitalsInfo> vitalsInfoMutableLiveData = new MutableLiveData<VitalsInfo>();
 
-    public static IRepository getInstance(Context context) {
-        if(instance==null){
-            instance = new RepositoryImplementor(context);
-        }
-        return instance;
-    }
+    public RepositoryImplementor(Context context, VitalsAPIProvider provider, SimpleCustomCache cache) {
 
-    private RepositoryImplementor(Context context) {
         this.context = context;
-
-        apiProvider = MyApplication.getVitalsAPIProvider();
-        simpleCustomCache = MyApplication.getSimpleCustomCache();
+        this.apiProvider = provider;
+        this.simpleCustomCache = cache;
 
         isLoading.postValue(true);
         apiProvider.getVitalsInfo().enqueue(new Callback<VitalsInfo>() {
