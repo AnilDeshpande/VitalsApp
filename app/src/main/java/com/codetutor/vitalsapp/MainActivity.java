@@ -20,6 +20,9 @@ import com.codetutor.vitalsapp.view.VitalsInfoFragment;
 import com.codetutor.vitalsapp.viewmodel.VitalsInfoModelFactory;
 import com.codetutor.vitalsapp.viewmodel.VitalsInfoViewModel;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements VitalSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();

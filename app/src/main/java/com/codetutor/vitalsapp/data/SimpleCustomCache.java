@@ -10,6 +10,10 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.qualifiers.ApplicationContext;
+
 public class SimpleCustomCache {
 
     private static final String TAG = SimpleCustomCache.class.getSimpleName();
@@ -17,9 +21,10 @@ public class SimpleCustomCache {
     Context context;
     SharedPreferences sharedPreferences;
 
-    public SimpleCustomCache(Context context){
+    @Inject
+    public SimpleCustomCache(@ApplicationContext Context context){
         this.context = context;
-        sharedPreferences = context.getSharedPreferences("simple_preference.xml", Context.MODE_PRIVATE);
+        sharedPreferences = this.context.getSharedPreferences("simple_preference.xml", Context.MODE_PRIVATE);
 
     }
 

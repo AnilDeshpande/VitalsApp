@@ -5,6 +5,9 @@ import com.codetutor.vitalsapp.bean.VitalsInfo;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -19,6 +22,7 @@ public class VitalsAPIProvider {
     private HttpLoggingInterceptor loggingInterceptor;
     VitalAPIInterface apiInterface;
 
+    @Inject
     public VitalsAPIProvider(String baseUrl,
                               long readTimeout,
                               long connectTimeout,

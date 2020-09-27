@@ -6,26 +6,31 @@ import android.content.Context;
 import com.codetutor.vitalsapp.data.IRepository;
 import com.codetutor.vitalsapp.data.RepositoryImplementor;
 import com.codetutor.vitalsapp.data.SimpleCustomCache;
-import com.codetutor.vitalsapp.networking.VitalsAPIConstants;
 import com.codetutor.vitalsapp.networking.VitalsAPIProvider;
 
+import javax.inject.Inject;
+
+import dagger.Module;
+import dagger.hilt.android.HiltAndroidApp;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 import okhttp3.logging.HttpLoggingInterceptor;
 
+@HiltAndroidApp
 public class MyApplication extends Application {
 
-    private Context context;
+    @ApplicationContext
+    @Inject
+    Context context;
 
-    protected VitalsAPIProvider vitalsAPIProvider;
-    protected SimpleCustomCache simpleCustomCache;
-    protected IRepository repository;
+    @Inject VitalsAPIProvider vitalsAPIProvider;
+    @Inject SimpleCustomCache simpleCustomCache;
+
+    IRepository repository;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        this.context = this;
-        vitalsAPIProvider = new VitalsAPIProvider (VitalsAPIConstants.BASE_URL, 5000, 5000, HttpLoggingInterceptor.Level.BODY);
-        simpleCustomCache = new SimpleCustomCache(this.context);
-        repository = new RepositoryImplementor(this.context,vitalsAPIProvider, simpleCustomCache);
+        repository = new RepositoryImplementor(context,vitalsAPIProvider, simpleCustomCache);
     }
 
     public IRepository getRepository(){

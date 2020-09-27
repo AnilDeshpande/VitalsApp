@@ -14,23 +14,26 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.qualifiers.ApplicationContext;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-    public class RepositoryImplementor implements IRepository{
+    public class RepositoryImplementor implements IRepository {
 
     private static final String TAG = RepositoryImplementor.class.getSimpleName();
 
-    private Context context;
-
-    private VitalsAPIProvider apiProvider;
-    private SimpleCustomCache simpleCustomCache;
+    @Inject Context context;
+    @Inject VitalsAPIProvider apiProvider;
+    @Inject SimpleCustomCache simpleCustomCache;
 
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private MutableLiveData<VitalsInfo> vitalsInfoMutableLiveData = new MutableLiveData<VitalsInfo>();
 
-    public RepositoryImplementor(Context context, VitalsAPIProvider provider, SimpleCustomCache cache) {
+    @Inject
+    public RepositoryImplementor(@ApplicationContext Context context, VitalsAPIProvider provider, SimpleCustomCache cache) {
 
         this.context = context;
         this.apiProvider = provider;
