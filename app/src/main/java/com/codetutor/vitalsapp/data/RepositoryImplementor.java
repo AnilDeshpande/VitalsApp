@@ -1,25 +1,19 @@
     package com.codetutor.vitalsapp.data;
 
-import android.content.Context;
-import android.util.Log;
+    import android.content.Context;
 
-import androidx.lifecycle.MutableLiveData;
+    import androidx.lifecycle.MutableLiveData;
 
-import com.codetutor.vitalsapp.MyApplication;
-import com.codetutor.vitalsapp.bean.Vital;
-import com.codetutor.vitalsapp.bean.VitalsInfo;
-import com.codetutor.vitalsapp.networking.VitalsAPIProvider;
-import com.google.gson.Gson;
+    import com.codetutor.vitalsapp.bean.Vital;
+    import com.codetutor.vitalsapp.bean.VitalsInfo;
+    import com.codetutor.vitalsapp.networking.VitalsAPIProvider;
 
-import java.io.IOException;
-import java.io.InputStream;
+    import javax.inject.Inject;
 
-import javax.inject.Inject;
-
-import dagger.hilt.android.qualifiers.ApplicationContext;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+    import dagger.hilt.android.qualifiers.ApplicationContext;
+    import retrofit2.Call;
+    import retrofit2.Callback;
+    import retrofit2.Response;
 
     public class RepositoryImplementor implements IRepository {
 
