@@ -26,3 +26,4 @@
  Potential Improvement
     - I could have used other featured of Hilt to demonstrate ActivityComponent/FragmentComponent, but I have kept is very minimum due to paucity of time
     - I did't get the time to complete the Unit Tests. Monday is submission time.
+    - I have not used Android Navigation Component. Just to keep it simple. 
