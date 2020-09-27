@@ -47,12 +47,7 @@ import retrofit2.Response;
 
             @Override
             public void onFailure(Call<VitalsInfo> call, Throwable t) {
-                if(simpleCustomCache.isVitalsInfoCached()){
-                    vitalsInfoMutableLiveData.setValue(simpleCustomCache.fetchVitalsInfo());
-                }else {
-                    vitalsInfoMutableLiveData.setValue(readFromLocalCache());
-                }
-
+                vitalsInfoMutableLiveData.setValue(simpleCustomCache.fetchVitalsInfo());
                 isLoading.postValue(false);
             }
         });
@@ -61,23 +56,6 @@ import retrofit2.Response;
     @Override
     public MutableLiveData<Boolean> getIsLoading() {
         return isLoading;
-    }
-
-    private VitalsInfo readFromLocalCache(){
-        String jsonString = null;
-        try {
-            InputStream is = context.getAssets().open("vitals_mock_data.json");
-
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            jsonString = new String(buffer, "UTF-8");
-            //Log.i(TAG,jsonString);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new Gson().fromJson(jsonString, VitalsInfo.class);
     }
 
     @Override
