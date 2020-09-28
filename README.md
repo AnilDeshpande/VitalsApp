@@ -4,11 +4,11 @@
  The has been written using the MVVM architecture using Simple Java.
  Hilt has been used for Dependency Injection
  MainActivity hosts Two Fragments -
-    -MainFragment shows just the first info with four buttons. OnLick of any button new Fragment is loaded
+    - MainFragment shows just the first info with four buttons. OnLick of any button new Fragment is loaded
     - VitalsInfoFragment shows the chart
 
  The applications tries to load the Vitals data from API call
- If the API call a success
+ If the API call is a success
     - The the response is cached in SharedPreference (I could I have used database but there is no id in response)
     - The it is rendered
     - Till it is rendered you will see progress bar
@@ -25,5 +25,5 @@
 
  Potential Improvement
     - I could have used other featured of Hilt to demonstrate ActivityComponent/FragmentComponent, but I have kept is very minimum due to paucity of time
-    - I did't get the time to complete the Unit Tests. Monday is submission time.
+    - I did't get the time to complete the Unit Tests.
     - I have not used Android Navigation Component. Just to keep it simple. 
