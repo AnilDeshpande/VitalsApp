@@ -25,12 +25,11 @@ public class MyApplication extends Application {
     @Inject VitalsAPIProvider vitalsAPIProvider;
     @Inject SimpleCustomCache simpleCustomCache;
 
-    IRepository repository;
+    @Inject IRepository repository;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        repository = new RepositoryImplementor(context,vitalsAPIProvider, simpleCustomCache);
     }
 
     public IRepository getRepository(){
