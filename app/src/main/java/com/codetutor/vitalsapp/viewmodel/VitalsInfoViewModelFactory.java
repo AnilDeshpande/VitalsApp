@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.codetutor.vitalsapp.data.IRepository;
 
-public class VitalsInfoModelFactory implements ViewModelProvider.Factory {
+public class VitalsInfoViewModelFactory implements ViewModelProvider.Factory {
 
     IRepository repository;
 
-    public VitalsInfoModelFactory(IRepository repository){
+    public VitalsInfoViewModelFactory(IRepository repository){
         this.repository = repository;
     }
 
